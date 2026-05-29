@@ -57,17 +57,16 @@ class LightMixin(object):
         locally_handled = False
         if namespace == Namespace.SYSTEM_ALL:
             digest_data = data.get('all', {}).get('digest', {})
-            #On device MRS100 it reports as Handle Light but has no light data then digest is empty
-            if digest_data.has_key(light):
-                light_data = digest_data.get('light', [])
-                self._update_channel_status(channel=light_data.get('channel'),
-                                            rgb=light_data.get('rgb'),
-                                            luminance=light_data.get('luminance'),
-                                            temperature=light_data.get('temperature'),
-                                            onoff=light_data.get('onoff'))
+            # On device MRS100 it reports as handling Light but has no light data; digest has no 'light' key
+            if light := digest_data.get('light'):
+                self._update_channel_status(channel=light.get('channel'),
+                                            rgb=light.get('rgb'),
+                                            luminance=light.get('luminance'),
+                                            temperature=light.get('temperature'),
+                                            onoff=light.get('onoff'))
                 locally_handled = True
             else:
-                _LOGGER.debug(f"Device has no light value in data:{data}")
+                _LOGGER.debug(f"Device has no light value in data: {data}")
         super_handled = await super().async_handle_update(namespace=namespace, data=data)
         return super_handled or locally_handled
 
