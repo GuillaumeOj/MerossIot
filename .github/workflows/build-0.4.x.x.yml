@@ -42,9 +42,3 @@ jobs:
         with:
          tag_name: ${{env.tag}}
          release_name: Version ${{env.tag}}
-      - name: Release on Pypi
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          twine upload -u "$TWINE_USERNAME" -p "$TWINE_PASSWORD" dist/*
